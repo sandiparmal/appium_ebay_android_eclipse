@@ -22,8 +22,8 @@ public class Utils {
 		return false;
 	}
 
-	public void swipeVertical(double startPercentage, double finalPercentage, double anchorPercentage,
-			int duration) throws Exception {
+	public void swipeVertical(double startPercentage, double finalPercentage, double anchorPercentage, int duration)
+			throws Exception {
 
 		org.openqa.selenium.Dimension size = driver.manage().window().getSize();
 		int anchor = (int) (size.width * anchorPercentage);
@@ -37,5 +37,14 @@ public class Utils {
 	public MobileElement getElement(String id) {
 		return ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/" + id + "\")");
+	}
+
+	public void sleep(int milliseconds) {
+		try {
+			Thread.sleep(milliseconds);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

@@ -1,9 +1,15 @@
 package com.infosys.appium;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.commons.lang3.ObjectUtils;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -41,15 +47,9 @@ public class AppiumTest {
 			System.out.println(e.getMessage());
 		}
 
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 		objUtils = new Utils(driver);
-
+		objUtils.sleep(10000);  
+		
 		// check if login button is present or not
 		boolean isLoggedInBtnPresent = objUtils.isElementPresent("com.ebay.mobile:id/button_sign_in");
 	
@@ -69,20 +69,19 @@ public class AppiumTest {
 	private static void executeSearchFlow() {
 
 		boolean isSearchPresent = objUtils.isElementPresent("com.ebay.mobile:id/search_box");
-		Assert.assertTrue("Failed to locate element", isSearchPresent);
+		Assert.assertTrue("Failed to locate Search TextView", isSearchPresent);
+		
 		if (isSearchPresent) {
 			// Identify an element using Resource ID (exact match)
-			MobileElement loginButton = ((AndroidDriver<MobileElement>) driver)
+			MobileElement searchBox = ((AndroidDriver<MobileElement>) driver)
 					.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/search_box\")");
-			loginButton.click();
+			searchBox.click();
 
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			objUtils.sleep(10000);
 
+			boolean isSearchMainPresent = objUtils.isElementPresent("com.ebay.mobile:id/search_src_text");
+			Assert.assertTrue("Failed to locate Search EditText", isSearchMainPresent);
+			
 			// Find 'Ebay Search' element and set the value
 			MobileElement searchEditText = ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(
 					"new UiSelector().resourceId(\"com.ebay.mobile:id/search_src_text\")");
@@ -92,12 +91,7 @@ public class AppiumTest {
 			// pressed search on keyboard
 			((AndroidDriver<MobileElement>) driver).pressKeyCode(66);
 
-			try {
-				Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			objUtils.sleep(10000);
 
 			// check if popup is visible or not for saving
 			boolean isSavePopupShowing = objUtils.isElementPresent("com.ebay.mobile:id/text_slot_1");
@@ -122,41 +116,50 @@ public class AppiumTest {
 
 		// Search list screen
 		// Find random list item from search list
-		driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector()"
+		WebElement listItem = driver.findElementByAndroidUIAutomator("new UiScrollable(new UiSelector()"
 				+ ".scrollable(true).instance(0)).scrollIntoView(new UiSelector()"
-				+ ".textContains(\"SONY KD-65X9300E 165CM (65INCH) 4K HDR LED TV WITH 1 YEAR SONY INDIA WARRANTY\")"
-				+ ".instance(0))").click();
+				+ ".textContains(\"65 inch 4K UHD ANDROID SMART SAMSUNG PANEL 8GB LED TV +1YR RREPLACEMENT\")"
+				+ ".instance(0))");
+		listItem.click();
+		
+		String clickedItemText = listItem.getAttribute("text");
+		
+		System.out.println("clicked item text : "+clickedItemText);
 
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		objUtils.sleep(10000);
 
+		boolean isBuyButtonPresent = objUtils.isElementPresent("com.ebay.mobile:id/button_bin");
+		Assert.assertTrue("Failed to locate Buy Button", isBuyButtonPresent);
 		// main item screen
 		// Find 'buyItButton' element and set the value
 		MobileElement buyItButton = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/button_bin\")");
 		buyItButton.click();
 
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		objUtils.sleep(10000);
 
 		// quantity screen
+		//is product tile is present or not
+		boolean isTitlePresentInCart = objUtils.isElementPresent("com.ebay.mobile:id/item_title");
+		Assert.assertTrue("Failed to locate Title TextView", isTitlePresentInCart);
+		
+		MobileElement titleTextView = ((AndroidDriver<MobileElement>) driver)
+				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/item_title\")");
+		String cartProductText = titleTextView.getAttribute("text");
+		
+		// compare it clicked item text is equal to cart product text
+		assertEquals(clickedItemText, cartProductText);
+		
+		boolean isReviewButtonPresent = objUtils.isElementPresent("com.ebay.mobile:id/take_action");
+		Assert.assertTrue("Failed to locate Review Button", isReviewButtonPresent);
+		
 		// Find 'Review' element and set the value
 		MobileElement reviewButton = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/take_action\")");
 		reviewButton.click();
 
-		long timeoutInSeconds = 30;
-		new WebDriverWait(driver, timeoutInSeconds)
-				.until(ExpectedConditions.elementToBeClickable(By.id("com.ebay.mobile:id/progress_bar")));
-
+		objUtils.sleep(10000);
+		
 		boolean isAddAddress = objUtils.isElementPresent("com.ebay.mobile:id/sbtBtn");
 		if (isAddAddress) {
 			// add address details
@@ -164,8 +167,10 @@ public class AppiumTest {
 			System.out.println("add address details");
 		} else {
 			// address is already added
-			System.out.println("address is already added");
-
+			// proceed to checkout
+			System.out.println("address is already added, Proceed to checkout");
+			System.out.println("WebView Can not be tested");
+			
 		}
 
 	}
@@ -217,22 +222,26 @@ public class AppiumTest {
 		MobileElement continueButton = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/sbtBtn\")");
 		continueButton.click();
+		
+		executeSearchFlow();
 
 	}
 
 	private static void executeLoginFlow() {
 
+		boolean isLoginButtonPresent = objUtils.isElementPresent("com.ebay.mobile:id/button_sign_in");
+		Assert.assertTrue("Failed to locate Login Button", isLoginButtonPresent);
+		
 		// Identify an element using Resource ID (exact match)
 		MobileElement loginButton = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/button_sign_in\")");
 		loginButton.click();
 
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		objUtils.sleep(10000);
+		
+		boolean isEmailTextPresent = objUtils.isElementPresent("com.ebay.mobile:id/edit_text_username");
+		Assert.assertTrue("Failed to locate Email EditText", isEmailTextPresent);
+		
 		// Find 'Ebay Email' element and set the value
 		MobileElement emailEditText = ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(
 				"new UiSelector().resourceId(\"com.ebay.mobile:id/edit_text_username\")");
@@ -243,6 +252,9 @@ public class AppiumTest {
 
 		((AndroidDriver<MobileElement>) driver).pressKeyCode(66);
 
+		boolean isPassTextPresent = objUtils.isElementPresent("com.ebay.mobile:id/edit_text_password");
+		Assert.assertTrue("Failed to locate Password EditText", isPassTextPresent);
+		
 		// Find 'Ebay Password Edittext' and set the value
 		MobileElement passwordEditText = ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(
 				"new UiSelector().resourceId(\"com.ebay.mobile:id/edit_text_password\")");
@@ -251,16 +263,14 @@ public class AppiumTest {
 
 		driver.hideKeyboard();
 
+		boolean isMainLoginButton = objUtils.isElementPresent("com.ebay.mobile:id/button_sign_in");
+		Assert.assertTrue("Failed to locate Password Login Button", isMainLoginButton);
+		
 		MobileElement mainLoginButton = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/button_sign_in\")");
 		mainLoginButton.click();
 
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		objUtils.sleep(10000);
 
 		// check if finger print enable popup is coming or not
 		boolean isPopupcoming = objUtils.isElementPresent("com.ebay.mobile:id/button2");
@@ -270,12 +280,7 @@ public class AppiumTest {
 			mayBeLaterButton.click();
 		}
 
-		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		objUtils.sleep(10000);
 
 		executeSearchFlow();
 
