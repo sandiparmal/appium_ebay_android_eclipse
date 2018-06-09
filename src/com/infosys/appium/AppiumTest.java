@@ -184,21 +184,21 @@ public class AppiumTest {
 		MobileElement addressEditText = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/address1\")");
 		addressEditText.clear();
-		addressEditText.setValue("Keshav Nagar, Chinchwad");
+		addressEditText.setValue("xyz, abc");
 
 		((AndroidDriver<MobileElement>) driver).pressKeyCode(66);
 
 		MobileElement apartmentEditText = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/address2\")");
 		apartmentEditText.clear();
-		apartmentEditText.setValue("10, Kunal Estate A-8, B Wing");
+		apartmentEditText.setValue("a, abc, Bcs");
 
 		((AndroidDriver<MobileElement>) driver).pressKeyCode(66);
 
 		MobileElement pinCodeEditText = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/zip\")");
 		pinCodeEditText.clear();
-		pinCodeEditText.setValue("411033");
+		pinCodeEditText.setValue("010110");
 
 		((AndroidDriver<MobileElement>) driver).pressKeyCode(66);
 
@@ -212,7 +212,7 @@ public class AppiumTest {
 		MobileElement mobileNumberEditText = ((AndroidDriver<MobileElement>) driver)
 				.findElementByAndroidUIAutomator("new UiSelector().resourceId(\"com.ebay.mobile:id/phoneFlagComp1\")");
 		mobileNumberEditText.clear();
-		mobileNumberEditText.setValue("8698579562");
+		mobileNumberEditText.setValue("1234567890");
 
 		((AndroidDriver<MobileElement>) driver).pressKeyCode(66);
 
@@ -246,7 +246,7 @@ public class AppiumTest {
 		MobileElement emailEditText = ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(
 				"new UiSelector().resourceId(\"com.ebay.mobile:id/edit_text_username\")");
 		emailEditText.clear();
-		emailEditText.setValue("armalsandip@gmail.com");
+		emailEditText.setValue("ABC@gmail.com");
 
 		driver.hideKeyboard();
 
@@ -259,7 +259,7 @@ public class AppiumTest {
 		MobileElement passwordEditText = ((AndroidDriver<MobileElement>) driver).findElementByAndroidUIAutomator(
 				"new UiSelector().resourceId(\"com.ebay.mobile:id/edit_text_password\")");
 		passwordEditText.clear();
-		passwordEditText.setValue("Deepali@1993");
+		passwordEditText.setValue("XYZ@ABC");
 
 		driver.hideKeyboard();
 
